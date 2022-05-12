@@ -63,11 +63,17 @@ class Tests(unittest.TestCase):
         self.assertEqual(weighted_average(*weighted_average_args), lambda_weighted_average(*weighted_average_args))
 
     def test_exercise(self):
+        def function(s:str):
+            def closure():
+                s2 = s.upper()
+                return "_".join(s2)
+            return closure
+        lam = lambda s: "_".join(s.upper())
+        self.assertEqual(lam("wdwqede"),function("wdwqede")())
         """Define closure and lambda.
-
-        Both of them should change given string to uppercase
-        and add underscore at the beginning.
-        Add some tests.
+            Both of them should change given string to uppercase
+            and add underscore at the beginning.
+            Add some tests.
         """
 
 if __name__ == "__main__":
