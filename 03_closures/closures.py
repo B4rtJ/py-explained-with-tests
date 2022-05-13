@@ -63,12 +63,22 @@ class Tests(unittest.TestCase):
         self.assertEqual(weighted_average(*weighted_average_args), lambda_weighted_average(*weighted_average_args))
 
     def test_exercise(self):
+        def function(input_list: list):
+            def closure():
+                l2 = []
+                for s in input_list:
+                    l2.append("_"+(s.upper()))
+                return l2
+            return closure
+        lam = lambda l: list(map(lambda s2: "_" + s2.upper(), l))
+        l1 = ["wedwe", "WEQDWd", "wedwed"]
+        self.assertEqual(lam(l1), function(l1)())
         """Define closure and lambda.
-
-        Both of them should change given string to uppercase
-        and add underscore at the beginning.
-        Add some tests.
+            Both of them should change given string to uppercase
+            and add underscore at the beginning.
+            Add some tests.
         """
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
