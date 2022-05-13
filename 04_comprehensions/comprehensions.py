@@ -80,6 +80,7 @@ class Tests(unittest.TestCase):
         Both should create new list of words without words that start with underscore.
         """
         words = ("__init__", "__call__", "configure", "start", "stop")
+
         def list_of_words():
             closure_list = []
             for word in words:
@@ -88,5 +89,7 @@ class Tests(unittest.TestCase):
             return closure_list
         new_list = [i for i in words if not i.startswith("_")]
         self.assertEqual(list_of_words(), new_list)
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)
