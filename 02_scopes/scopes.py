@@ -117,9 +117,13 @@ class Tests(unittest.TestCase):
         Define variable accessible globally, increment its value and check if it is propely incremented
         in test_example_part_2. Tests are executed in alphabetical order.
         """
+        import pack
+        from pack.cfg.flags import Flags
+        Flags.counter += 1
+
 
     def test_k_example_part_2(self):
-        pass
+        self.assertEqual(Flags.counter,2)
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

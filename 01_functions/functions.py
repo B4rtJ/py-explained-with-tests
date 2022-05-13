@@ -168,7 +168,7 @@ class Tests(unittest.TestCase):
 
         self.assertEqual(fun_kwargs_dict(1), (1, {"b": 4}))
 
-        returned_dict = fun_kwargs_dict(1, b = 2, c = 3)[1]
+        returned_dict = fun_kwargs_dict(1, b=2, c=3)[1]
         self.assertEqual(fun_kwargs_dict(2, **returned_dict), (2, {"b": 2, "c": 3}))
 
     def test_exercise(self):
@@ -183,6 +183,15 @@ class Tests(unittest.TestCase):
 
         With function defined test possible calls with assertEqual.
         """
+        def fun_exercise(arg1: int, /, any2=5, *, kwarg1=10):
+            return arg1, any2, kwarg1
+        self.assertEqual(fun_exercise(3, 2, kwarg1=20), (3, 2, 20))
+        self.assertEqual(fun_exercise(5, 6, kwarg1=6), (5, 6, 6))
+        self.assertEqual(fun_exercise(1, any2=2), (1, 2, 10))
+        self.assertEqual(fun_exercise(3, 2), (3, 2, 10))
+        self.assertEqual(fun_exercise(1), (1, 5, 10))
+        self.assertRaises(TypeError, fun_exercise, 1, 2, 5)
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
