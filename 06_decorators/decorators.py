@@ -100,13 +100,12 @@ class Tests(unittest.TestCase):
             def _decor(fun):
                 @functools.wraps(fun)
                 def _wrapper(*args, **kwargs):
-                    # write your part here
                     return fun(*args, **kwargs)
                 return _wrapper
             return _decor
 
         results = (result for result in [False, False, True, False, True])
-
+        @retry()
         def retried_function():
             try:
                 return next(results)

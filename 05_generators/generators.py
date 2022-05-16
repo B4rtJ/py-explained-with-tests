@@ -87,32 +87,32 @@ class Tests(unittest.TestCase):
         fibo = list(gen)
         self.assertEqual(fibo[-1], fibo[-2] + fibo[-3])
 
-    def test_interactive_gen(self):
-        def interactive_gen() -> float:
-            x = 1.0
-            y = yield x
-            for _ in range(4):
-                x = x + y
-                y = yield x
-
-        g = interactive_gen()
-        self.assertIsInstance(g, Generator)
-
-        # When we don't want to use for loop, we can
-        # iterate through generator with next function
-        y = next(g)
-        log.info(f"{y=}")
-        # next is equivalent to g.send(None)
-        # in first call we cannot send anything because first
-        # we need to return something
-        while True:
-            try:
-                y = g.send(float(input("x=")))
-                log.info(f"{y=}")
-            except StopIteration:
-                # Once we iterate with "next" function we need to handle
-                # StopInteration exception
-                break
+    # def test_interactive_gen(self):
+    #     def interactive_gen() -> float:
+    #         x = 1.0
+    #         y = yield x
+    #         for _ in range(4):
+    #             x = x + y
+    #             y = yield x
+    #
+    #     g = interactive_gen()
+    #     self.assertIsInstance(g, Generator)
+    #
+    #     # When we don't want to use for loop, we can
+    #     # iterate through generator with next function
+    #     y = next(g)
+    #     log.info(f"{y=}")
+    #     # next is equivalent to g.send(None)
+    #     # in first call we cannot send anything because first
+    #     # we need to return something
+    #     while True:
+    #         try:
+    #             y = g.send(float(input("x=")))
+    #             log.info(f"{y=}")
+    #         except StopIteration:
+    #             # Once we iterate with "next" function we need to handle
+    #             # StopInteration exception
+    #             break
 
     def test_primes(self):
         def primes_gen(end=1000):
@@ -158,17 +158,47 @@ class Tests(unittest.TestCase):
             log.debug(f"{index}. {prime}")
         log.info(f"duration = {time.time()-start:.8}s")
 
-    def test_exercise_my_enumerate_generator(self):
+    def test_exercise_my_enumerate_generator(self,):
         """Write your own generator that behaves like 'enumerate' function.
 
         https://docs.python.org/3/library/functions.html#enumerate
 
         Add tests.
         """
+        def enumerate_gen(it,start=0):
+            index = start
+            for item in it:
+                yield index,item
+                index +=1
+        l = ["wedwed","dwedwa","wedwe"]
+        self.assertEqual(list(enumerate(l)), list(enumerate_gen(l)))
+        enum_fun = enumerate_gen(l)
+        self.assertEqual(next(enum_fun), (0, "wedwed"))
+        self.assertEqual(next(enum_fun), (1, "dwedwa"))
+        self.assertEqual(next(enum_fun), (2, "wedwe"))
+        self.assertRaises(StopIteration,next,enum_fun)
 
     def test_exercise_tic_tac_toe(self):
-        """Write generator that infinitially returns first tic, than tac, and toe."""
-
-
+        """Write generator that infinitely returns first tic, then tac, then toe."""
+        def tic_tac_toe():
+            i = 0
+            while True:
+                if i % 3 == 0:
+                    i += 1
+                    yield "tic"
+                if i % 3 == 1:
+                    i += 1
+                    yield "tac"
+                if i % 3 == 2:
+                    i += 1
+                    yield "toe"
+        gen = tic_tac_toe()
+        t1 = time.time()
+        for i in range(100):
+            self.assertEqual(next(gen), "tic")
+            self.assertEqual(next(gen), "tac")
+            self.assertEqual(next(gen), "toe")
+        t2 = time.time()
+        self.assertLess(t2-t1, 0.0009)
 if __name__ == "__main__":
     unittest.main(verbosity=2)
