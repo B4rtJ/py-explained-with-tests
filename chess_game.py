@@ -85,6 +85,7 @@ class Rook(Piece):
         self.position = changed
         self.moved = True
 
+
 class Queen(Piece):
     def __init__(self, player, position):
         self.player = player
@@ -99,6 +100,8 @@ class Queen(Piece):
 
     def attack(self, changed):
         self.position = changed
+
+
 class King(Piece):
     def __init__(self, player, position):
         self.player = player
@@ -116,15 +119,17 @@ class King(Piece):
     def attack(self, changed):
         self.position = changed
         self.moved = True
+
+
 class Game:
     def __init__(self,board, p):
         self.board = board
         self.pieces = p.copy()
         for piece in self.pieces:
             board.grid[piece.position[0]][piece.position[1]] = True
+
     def player_move(self):
         pass
-
 
 
 class MainWindow(QWidget):
@@ -158,27 +163,22 @@ class MainWindow(QWidget):
         pieces.append(Rook(False, [7, 0]))
         pieces.append(Queen(False, [3, 0]))
         pieces.append(King(False, [4, 0]))
-        self.game = Game(board,pieces)
+        self.game = Game(board, pieces)
         self.board = QLabel(self)
+        self.selected = False
+        self.circle = QLabel(self)
+        self.p1 = []
         self.board.setGeometry(0, 0, 750, 750)
         self.board.setPixmap(QPixmap("./pngs/chess_board.PNG").scaled(750,750))
         self.board.show()
-        self.selected = False
         self.update()
 
 
     def update(self):
-        try:
-            self.circle.hide()
-        except:
-            pass
-        self.circle = QLabel(self)
         self.circle.hide()
-        try:
-            for i in range(len(self.p1)):
-                self.p1[i].hide()
-        except:
-            pass
+        self.circle = QLabel(self)
+        for i in range(len(self.p1)):
+            self.p1[i].hide()
         self.p1 = []
         for piece in self.game.pieces:
             self.p2 = QLabel(self)
@@ -189,7 +189,6 @@ class MainWindow(QWidget):
             self.p1.append(self.p2)
         for i in range(len(self.p1)):
             self.p1[i].show()
-
 
     def mousePressEvent(self, event):
         if event.buttons() & Qt.MouseButton.LeftButton:
