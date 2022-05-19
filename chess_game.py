@@ -9,7 +9,7 @@ class Board:
     def move(self,starting_position:list,ending_pos):
         self.grid[starting_position[0]][starting_position[1]] = False
         self.grid[ending_pos[0]][ending_pos[1]] = True
-class Piece():
+class Piece(ABC):
     @abstractmethod
     def move(self,*args):
         ...
