@@ -2,7 +2,7 @@ import ast
 import logging
 from typing import Union
 import unittest
-
+extensions = ['sphinx.ext.napoleon']
 logging.basicConfig(
     level=logging.DEBUG,
     format="%(levelname)7s %(asctime)s [%(filename)13s:%(lineno)4d] %(message)s",
@@ -13,7 +13,9 @@ logger = logging.getLogger()
 
 class Numeric:
     class NotANumber(ArithmeticError):
-        """Exception"""
+        """
+
+        """
 
 
     def __init__(self, x : Union[float, int, bytes]):
@@ -74,7 +76,13 @@ class Numeric:
             Return `+inf` once overflowed value is positive
             `-inf` otherwise`. Fix tests.
         """
-        return self.__val ** float(x)
+        try:
+            return self.__val ** float(x)
+        except OverflowError as err:
+            if self.__val < 0:
+                return "-inf"
+            if self.__val > 0:
+                return "inf"
 
     def __repr__(self):
         return str(self.__val)
@@ -88,11 +96,13 @@ class Tests(unittest.TestCase):
         self.assertIsNotNone(Numeric(5) / Numeric(0))
 
     def test_overflow_exception(self):
-        with self.assertRaises(OverflowError):
-            Numeric(5) ** Numeric(1000)
+        self.assertEqual(Numeric(5) ** Numeric(1000), "inf")
+        self.assertEqual(Numeric(-5) ** Numeric(999), "-inf")
+        self.assertEqual(Numeric(2) ** Numeric(2), 4)
 
     def test_cant_cast_from_string(self):
         self.assertRaises(Numeric.NotANumber, Numeric, "abc")
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
